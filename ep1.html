@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>บทเรียน JavaScript เรื่อง AJAX</title>
+  <style>
+  body{font-family:'Sitka Display';margin:2px;overflow-y:scroll}
+  div.title{background-image:linear-gradient(to left,#99ff00,#33ffff,#ff0099);color:white;font-size:25px;font-weight:bold;padding:1px 10px 2px 20px}
+  div.line{background-image:linear-gradient(#00cc00,#ffff00,#ffff00);height:3px}
+  div#clk{float:right;margin-top:-30px;background:#009900;color:#ffff00;margin-right:10px;font-size:20px;font-weight:bolder;padding:0px 7px;text-shadow:1px 1px #000;border-radius:3px}
+  div#txtRun{background-color:#ff0066;color:#ffffff}
+  ul.menu{background:#cc33ff;list-style:none;margin:0;padding:2px 2px 2px 5px}
+  li{display:inline;}
+  button{width:150px;color:red;background-image:linear-gradient(#ff50ff,#00ff00,#00cc00);border:none;box-shadow:1px 3px #ffff00}
+  button:hover{background-image:linear-gradient(#ccff00,#66ff00,#ffff00)}
+  div#txtRun{white-space:nowrap;overflow:none}
+  tr.list:hover{box-shadow:0px 1px red;background:#ff6600;color:#fff}
+  li{display:inline}
+  img.book{margin-bottom:-9px}
+  img.book:hover{transform:scale(1.5);}
+  tr.header{background:#ff6600;color:#fff;border-radius:4px;position:sticky;top:110px;}
+  table{border:2px solid #888}
+  div.head{position: sticky;top:0;}
+
+  </style>
+  <script>
+ function getTime(){
+ let ti=(''+new Date()).split(' ')[4]
+ document.getElementById('clk').innerHTML=ti
+ setTimeout(getTime,900)
+ }//end getTime
+
+let data='......Welcome to TNK Book Center -:- ยินดีต้อนรับสู่ร้านหนังสือ Tnk BooK Center ศูนย์รวมหนังสือช่างทุกระดับ ทุกประเภท TextBook จากต่างประเทศในรูปแบบ Book และ Ebook สมัครสมาชิกวันนี้ ลด 30% ทันทีี....'
+let len=data.length
+let cn=0
+function getText(){
+	let txt1=data.substring(cn,len)
+	let txt2=data.substring(0,cn) 
+	document.getElementById('txtRun').innerHTML=txt1+txt2
+	cn++
+	setTimeout(getText,150)
+	if(cn>len)cn=0
+	
+}//end getText
+
+  function getHome(){
+document.getElementById('btn1').style.boxShadow='1px 3px #ff9900'
+document.getElementById('btn2').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn3').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn4').style.boxShadow='1px 3px #ffff00'
+
+let pat=new XMLHttpRequest
+pat.open('get','Home.html',true)
+pat.send()
+pat.onload=function(){
+document.getElementById('content').innerHTML=pat.responseText
+}
+  }//end gethome
+function getCom(){
+document.getElementById('btn2').style.boxShadow='1px 3px #ff9900'
+document.getElementById('btn1').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn3').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn4').style.boxShadow='1px 3px #ffff00'
+
+let pat=new XMLHttpRequest
+pat.open('get','it.xml',true)
+pat.send()
+pat.onload=function(){
+	let book=pat.responseXML.getElementsByTagName('it')
+	let len=book.length
+	let tmp=''
+	for(let i=0;i<len;i++){
+	tmp+='<tr class=list><td align=center width=65>'+
+	book[i].getElementsByTagName('bookID')[0].childNodes[0].nodeValue
+	+'</td><td width=450 style=padding:10px>'+
+	book[i].getElementsByTagName('bookName')[0].childNodes[0].nodeValue
+	+'</td><td align=center width=75>'+
+	book[i].getElementsByTagName('bookPrice')[0].childNodes[0].nodeValue
+	+' บาท</td><td><img class=book width=150 height=200 src=imgcom/'+
+	book[i].getElementsByTagName('bookPicture')[0].childNodes[0].nodeValue
+	+'></td></tr>'
+	}//end loop for
+document.getElementById('content').innerHTML='<table align="center"border=0>'+
+'<tr class=header><th>รหัส</th><th>ชื่อหนังสือ</th><th>ราคา</th><th>รูป</th></tr>'+
+tmp+'</table>'
+}
+}//end getCom
+function getElec(){
+document.getElementById('btn3').style.boxShadow='1px 3px #ff9900'
+document.getElementById('btn1').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn2').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn4').style.boxShadow='1px 3px #ffff00'
+
+let pat=new XMLHttpRequest
+pat.open('get','elec.xml',true)
+pat.send()
+pat.onload=function(){
+	let book=pat.responseXML.getElementsByTagName('it')
+	let len=book.length
+	let tmp=''
+	for(let i=0;i<len;i++){
+	tmp+='<tr class=list><td align=center width=65>'+
+	book[i].getElementsByTagName('bookID')[0].childNodes[0].nodeValue
+	+'</td><td width=450 style=padding:10px>'+
+	book[i].getElementsByTagName('bookName')[0].childNodes[0].nodeValue
+	+'</td><td align=center width=75>'+
+	book[i].getElementsByTagName('bookPrice')[0].childNodes[0].nodeValue
+	+' บาท</td><td><img class=book width=150 height=200 src=imgelec/'+
+	book[i].getElementsByTagName('bookPicture')[0].childNodes[0].nodeValue
+	+'></td></tr>'
+	}//end loop for
+document.getElementById('content').innerHTML='<table align="center"border=0>'+
+'<tr class=header><th>รหัส</th><th>ชื่อหนังสือ</th><th>ราคา</th><th>รูป</th></tr>'+
+tmp+'</table>'
+}
+
+
+}//end getElec
+function getAbout(){
+document.getElementById('btn4').style.boxShadow='1px 3px #ff9900'
+document.getElementById('btn1').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn2').style.boxShadow='1px 3px #ffff00'
+document.getElementById('btn3').style.boxShadow='1px 3px #ffff00'
+
+let pat=new XMLHttpRequest
+pat.open('get','About.html',true)
+pat.send()
+pat.onload=function(){
+document.getElementById('content').innerHTML=pat.responseText
+}
+}//end getAbout
+
+
+  </script>
+ </head>
+ <body onload="getTime(),getHome(),getText()">
+  <div class='head'><!--start head-->
+  <div class='title'>ร้านหนังสือ TNK Book Center</div>
+  <div class='line'>&nbsp;</div>
+  <div id='clk'>00:00:00</div>
+  <div id='txtRun'>อักษรวิ่ง</div>
+  <ul class='menu'>
+  <li><button id='btn1' onclick='getHome()'>หน้าแรก</button></li>
+	<li><button id='btn2'  onclick='getCom()'>หมวดคอมพิวเตอร์</button></li>
+	<li><button id='btn3'  onclick='getElec()'>หมวดอิเล็กทรอนิกส์</button></li>
+	<li style='float:right;margin-right:5px;'>
+	<button style='margin-top:-0px' onclick='getAbout()' id='btn4' >About</button></li>
+  </ul>
+  </div><!--end head -->
+ <div id='content' align=center>content</div>
+ </body>
+
+</html>
